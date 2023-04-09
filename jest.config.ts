@@ -9,7 +9,7 @@ const config: Config.InitialOptions = {
   transform: {
     '.+\\.ts$': 'ts-jest',
   },
-  preset: 'ts-jest',
+  preset: '@shelf/jest-mongodb',
 }
 
 export default config
