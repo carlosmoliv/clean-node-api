@@ -3,7 +3,9 @@ import { AccountMongoRepository } from './account'
 
 describe('Account Mongo Repository', () => {
   beforeAll(async () => {
-    await MongoHelper.connect('mongodb://localhost:27017/clean-node-api')
+    await MongoHelper.connect(
+      process.env.MONGO_URI || 'mongodb://localhost:27017/clean-node-api'
+    )
   })
 
   afterAll(async () => {
