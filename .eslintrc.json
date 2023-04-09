@@ -1,11 +1,25 @@
 {
-  "extends": ["standard-with-typescript", "plugin:prettier/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": ["@typescript-eslint/eslint-plugin"],
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+  "env": {
+    "node": true,
+    "jest": true
   },
   "rules": {
     "@typescript-eslint/strict-boolean-expressions": "off",
-    "@typescript-eslint/method-signature-style": "off",
-    "@typescript-eslint/no-namespace": "off"
+    "@typescript-eslint/return-await": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }

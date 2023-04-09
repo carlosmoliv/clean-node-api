@@ -1,5 +1,4 @@
 import { Collection, MongoClient } from 'mongodb'
-import { AccountModel } from '../../../../domain/models/account'
 
 export const MongoHelper = {
   client: null as unknown as MongoClient,
@@ -8,7 +7,7 @@ export const MongoHelper = {
     // if (!process.env.MONGO_URI) throw new Error('MongoDB URI not found')
 
     this.client = await MongoClient.connect(
-      'mongodb://localhost:27017/clean-node-api'
+      'mongodb://localhost:27017/clean-node-api',
     )
   },
 
