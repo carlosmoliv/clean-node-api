@@ -1,7 +1,7 @@
 import { MissingParamError } from '../../errors'
 import { EmailValidation } from './email-validation'
 import { RequiredFieldValidation } from './required-field-validation'
-import { Validation } from './validation'
+import { Validation } from '../../protocols/validation'
 import { ValidationComposite } from './validation-composite'
 
 const makeValidation = (): Validation => {
