@@ -4,7 +4,6 @@ export const MongoHelper = {
   client: null as unknown as MongoClient,
 
   async connect(uri: string): Promise<void> {
-    // if (!process.env.MONGO_URI) throw new Error('MongoDB URI not found')
     this.client = await MongoClient.connect(uri)
   },
 
