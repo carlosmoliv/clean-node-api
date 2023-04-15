@@ -6,7 +6,7 @@
   ],
   "plugins": ["@typescript-eslint/eslint-plugin"],
   "parserOptions": {
-    "project": "./tsconfig.json",
+    "project": "./tsconfig.eslint.json",
     "sourceType": "module"
   },
   "env": {
