@@ -9,7 +9,7 @@ import { AccountMongoRepository } from '../../../infra/db/mongodb/account/accoun
 import { BcryptAdapter } from '../../../infra/cryptography/bcrypt-adapter/bcrypt-adapter'
 import { JwtAdapter } from '../../../infra/cryptography/jwt-adapter/jwt-adapter'
 
-export const makeLoginCOntroller = (): Controller => {
+export const makeLoginController = (): Controller => {
   const salt = 12
 
   const bcryptAdapter = new BcryptAdapter(salt)
