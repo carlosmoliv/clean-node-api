@@ -9,8 +9,6 @@ services:
       - ./mongo-data:/data/db
     ports:
       - 27018:27017
-    environment:
-      - MONGO_URI=mongodb://mongodb:27017/knowledge-boost-api
   api:
     container_name: api-container
     build: .
@@ -18,7 +16,7 @@ services:
     image: clean-node-api
     command: yarn start
     volumes:
-      - ./dist:/usr/src/clean-node-api
+      - ./dist:/usr/src/clean-node-api/dist
     ports:
       - 5050:5050
     links:

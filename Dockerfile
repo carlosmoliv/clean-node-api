@@ -1,4 +1,4 @@
 FROM node:18
 WORKDIR /usr/src/clean-node-api
-COPY package.json yarn.lock ./
+COPY ./package.json .
 RUN yarn --production
