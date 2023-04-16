@@ -110,7 +110,7 @@ describe('SignUp Controller', () => {
 
     const httResponse = await sut.handle(makeFakeRequest())
 
-    expect(httResponse).toEqual(ok(makeFakeAccount()))
+    expect(httResponse).toEqual(ok({ accessToken: 'any_token' }))
   })
 
   it('Should call Validation with the correct value', async () => {
