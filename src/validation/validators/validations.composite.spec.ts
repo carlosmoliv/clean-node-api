@@ -1,8 +1,6 @@
-import { MissingParamError } from '../../errors'
-import { EmailValidation } from './email-validation'
-import { RequiredFieldValidation } from './required-field-validation'
-import { Validation } from '../../protocols/validation'
+import { MissingParamError } from '../../presentation/errors'
 import { ValidationComposite } from './validation-composite'
+import { Validation } from '../../presentation/protocols'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
