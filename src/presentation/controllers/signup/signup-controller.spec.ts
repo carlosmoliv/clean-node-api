@@ -50,10 +50,10 @@ const makeFakeAccount = (): AccountModel => ({
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
-    name: 'John Doe',
-    email: 'johndoe_invalid_email@mail.com',
-    password: '123456',
-    passwordConfirmation: '123456',
+    name: 'any_name',
+    email: 'any_email@mail.com',
+    password: 'any_password',
+    passwordConfirmation: 'any_password',
   },
 })
 
@@ -87,9 +87,9 @@ describe('SignUp Controller', () => {
     sut.handle(makeFakeRequest())
 
     expect(addSpy).toHaveBeenCalledWith({
-      name: 'John Doe',
-      email: 'johndoe_invalid_email@mail.com',
-      password: '123456',
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
     })
   })
 
@@ -134,5 +134,17 @@ describe('SignUp Controller', () => {
     const httResponse = await sut.handle(makeFakeRequest())
 
     expect(httResponse).toEqual(badRequest(new MissingParamError('any_value')))
+  })
+
+  it('Should call Authentication with correct values', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const authSpy = jest.spyOn(authenticationStub, 'auth')
+
+    await sut.handle(makeFakeRequest())
+
+    expect(authSpy).toHaveBeenCalledWith({
+      email: 'any_email@mail.com',
+      password: 'any_password',
+    })
   })
 })
