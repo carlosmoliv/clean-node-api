@@ -1,5 +1,3 @@
-import { AccountModel } from '../models/account'
-
 export interface SurveyAnswer {
   image?: string
   answer: string
