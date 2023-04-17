@@ -1,8 +1,8 @@
 import { makeLoginValidation } from './login-validation-factory'
 import { makeDbAuthentication } from '../../use-cases/authentication/db-authentication-factory'
 import { Controller } from '../../../../presentation/protocols'
-import { LoginController } from '../../../../presentation/controllers/login/login-controller'
 import { makeLogControllerDecorator } from '../../decorators/log-controller-decorator-factory'
+import { LoginController } from '../../../../presentation/controllers/accounts/login/login-controller'
 
 export const makeLoginController = (): Controller => {
   const controller = new LoginController(
