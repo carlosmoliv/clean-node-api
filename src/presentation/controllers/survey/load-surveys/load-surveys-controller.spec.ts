@@ -1,33 +1,34 @@
+import { ok } from '../../../helpers/http/http-helper'
 import { LoadSurveysController } from './load-surveys-controller'
 import { LoadSurveys, SurveyModel } from './load-surveys-controller-protocols'
 import mockdate from 'mockdate'
 
-const makeLoadSurveysStub = (): LoadSurveys => {
-  const makeFakeSurveys = (): SurveyModel[] => [
-    {
-      id: 'any_id',
-      question: 'any_question',
-      answers: [
-        {
-          image: 'any_image',
-          answer: 'any_answer',
-        },
-      ],
-      date: new Date(),
-    },
-    {
-      id: 'other_id',
-      question: 'other_question',
-      answers: [
-        {
-          image: 'other_image',
-          answer: 'other_answer',
-        },
-      ],
-      date: new Date(),
-    },
-  ]
+const makeFakeSurveys = (): SurveyModel[] => [
+  {
+    id: 'any_id',
+    question: 'any_question',
+    answers: [
+      {
+        image: 'any_image',
+        answer: 'any_answer',
+      },
+    ],
+    date: new Date(),
+  },
+  {
+    id: 'other_id',
+    question: 'other_question',
+    answers: [
+      {
+        image: 'other_image',
+        answer: 'other_answer',
+      },
+    ],
+    date: new Date(),
+  },
+]
 
+const makeLoadSurveysStub = (): LoadSurveys => {
   class LoadSurveysStub implements LoadSurveys {
     async load(): Promise<SurveyModel[]> {
       return Promise.resolve(makeFakeSurveys())
@@ -69,5 +70,13 @@ describe('LoadSurveysController', () => {
     await sut.handle({})
 
     expect(loadSpy).toHaveBeenCalled()
+  })
+
+  it('should return 200 on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle({})
+
+    expect(httpResponse).toEqual(ok(makeFakeSurveys()))
   })
 })
