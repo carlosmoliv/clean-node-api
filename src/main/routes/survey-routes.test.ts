@@ -89,5 +89,48 @@ describe('Login Routes', () => {
     it('should return 403 on add survey without access token', async () => {
       await request(app).get('/api/surveys').expect(403)
     })
+
+    it('should return 200 on load surveys if a valid access token is passed', async () => {
+      const res = await accountCollection.insertOne({
+        name: 'John Doe',
+        email: 'johndoe@mail.com',
+        password: '123456',
+      })
+
+      const id = res.insertedId
+      const accessToken = sign({ id }, env.jwtSecret)
+
+      await accountCollection.updateOne(
+        {
+          _id: id,
+        },
+        {
+          $set: {
+            accessToken,
+          },
+        }
+      )
+
+      await surveyCollection.insertMany([
+        {
+          question: 'any_question',
+          answers: [
+            {
+              image: 'any_image',
+              answer: 'any_answer',
+            },
+            {
+              answer: 'other_answer',
+            },
+          ],
+          date: new Date(),
+        },
+      ])
+
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(200)
+    })
   })
 })
