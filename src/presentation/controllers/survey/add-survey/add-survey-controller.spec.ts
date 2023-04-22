@@ -10,58 +10,68 @@ import {
   noContent,
   serverError,
 } from '../../../helpers/http/http-helper'
-
-const makeFakeRequest = (): HttpRequest => ({
-  body: {
-    question: 'any_question',
-    answers: [
-      {
-        image: 'any_image',
-        answer: 'any_answer',
-      },
-    ],
-  },
-})
-
-const makeValidation = (): Validation => {
-  class ValidationStub {
-    validate(input: any): Error {
-      return null
-    }
-  }
-
-  return new ValidationStub()
-}
-
-const makeAddSurvey = (): AddSurvey => {
-  class AddSurvey {
-    async add(data: AddSurveyModel): Promise<void> {
-      return new Promise((resolve) => resolve())
-    }
-  }
-
-  return new AddSurvey()
-}
-
-interface SutTypes {
-  sut: AddSurveyController
-  validationStub: Validation
-  addSurveyStub: AddSurvey
-}
-
-const makeSut = (): SutTypes => {
-  const validationStub = makeValidation()
-  const addSurveyStub = makeAddSurvey()
-  const sut = new AddSurveyController(validationStub, addSurveyStub)
-
-  return {
-    sut,
-    validationStub,
-    addSurveyStub,
-  }
-}
+import MockDate from 'mockdate'
 
 describe('AddSurvey Controller', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
+  const makeFakeRequest = (): HttpRequest => ({
+    body: {
+      question: 'any_question',
+      answers: [
+        {
+          image: 'any_image',
+          answer: 'any_answer',
+        },
+      ],
+      date: new Date(),
+    },
+  })
+
+  const makeValidation = (): Validation => {
+    class ValidationStub {
+      validate(input: any): Error {
+        return null
+      }
+    }
+
+    return new ValidationStub()
+  }
+
+  const makeAddSurvey = (): AddSurvey => {
+    class AddSurvey {
+      async add(data: AddSurveyModel): Promise<void> {
+        return new Promise((resolve) => resolve())
+      }
+    }
+
+    return new AddSurvey()
+  }
+
+  interface SutTypes {
+    sut: AddSurveyController
+    validationStub: Validation
+    addSurveyStub: AddSurvey
+  }
+
+  const makeSut = (): SutTypes => {
+    const validationStub = makeValidation()
+    const addSurveyStub = makeAddSurvey()
+    const sut = new AddSurveyController(validationStub, addSurveyStub)
+
+    return {
+      sut,
+      validationStub,
+      addSurveyStub,
+    }
+  }
+
   it('should call Validation with correct values', async () => {
     const { sut, validationStub } = makeSut()
 
