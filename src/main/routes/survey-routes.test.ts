@@ -25,6 +25,31 @@ describe('Login Routes', () => {
     await accountCollection.deleteMany({})
   })
 
+  const makeAccessToken = async (): Promise<string> => {
+    const res = await accountCollection.insertOne({
+      name: 'John Doe',
+      email: 'johndoe@mail.com',
+      password: '123456',
+      role: 'admin',
+    })
+
+    const id = res.insertedId
+    const accessToken = sign({ id }, env.jwtSecret)
+
+    await accountCollection.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          accessToken,
+        },
+      }
+    )
+
+    return accessToken
+  }
+
   describe('POST /surveys', () => {
     it('should return 403 on add survey without access token', async () => {
       await request(app)
@@ -44,27 +69,8 @@ describe('Login Routes', () => {
         .expect(403)
     })
 
-    it('should return 204 on add survey without access token', async () => {
-      const res = await accountCollection.insertOne({
-        name: 'John Doe',
-        email: 'johndoe@mail.com',
-        password: '123456',
-        role: 'admin',
-      })
-
-      const id = res.insertedId
-      const accessToken = sign({ id }, env.jwtSecret)
-
-      await accountCollection.updateOne(
-        {
-          _id: id,
-        },
-        {
-          $set: {
-            accessToken,
-          },
-        }
-      )
+    it('should return 204 on add survey with a valid access token', async () => {
+      const accessToken = await makeAccessToken()
 
       await request(app)
         .post('/api/surveys')
@@ -91,25 +97,7 @@ describe('Login Routes', () => {
     })
 
     it('should return 200 on load surveys if a valid access token is passed', async () => {
-      const res = await accountCollection.insertOne({
-        name: 'John Doe',
-        email: 'johndoe@mail.com',
-        password: '123456',
-      })
-
-      const id = res.insertedId
-      const accessToken = sign({ id }, env.jwtSecret)
-
-      await accountCollection.updateOne(
-        {
-          _id: id,
-        },
-        {
-          $set: {
-            accessToken,
-          },
-        }
-      )
+      const accessToken = await makeAccessToken()
 
       await surveyCollection.insertMany([
         {
