@@ -5,8 +5,12 @@
     "target": "es2019",
     "esModuleInterop": true,
     "sourceMap": false,
-    "rootDir": "src"
+    "rootDir": "src",
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    }
   },
-  "include": ["src/**/*", "src/presentation/errors/email-in-use-error.ts"],
-  "exclude": ["**/*.spec.ts", "**/*.test.ts"]
+  "include": ["src", "tests"],
+  "exclude": []
 }

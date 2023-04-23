@@ -10,6 +10,9 @@ const config: Config.InitialOptions = {
     '.+\\.ts$': 'ts-jest',
   },
   preset: '@shelf/jest-mongodb',
+  moduleNameMapper: {
+    '@/(.*)': '<rootDir>/src/$1',
+  },
 }
 
 export default config
