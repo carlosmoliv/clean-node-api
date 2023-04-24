@@ -66,6 +66,6 @@
     "node": ">=18.x"
   },
   "_moduleAliases": {
-    "@root": "."
+    "@": "dist"
   }
 }
