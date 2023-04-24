@@ -32,7 +32,7 @@ describe('DbLoadAccountByToken Usecase', () => {
 
     return new LoadAccountByTokenRepositoryStub()
   }
-  interface SutTypes {
+  type SutTypes = {
     sut: DbLoadAccountByToken
     decrypterStub: Decrypter
     loadAcountByTokenRepositoryStub: LoadAccountByTokenRepository
