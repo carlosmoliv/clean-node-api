@@ -9,19 +9,15 @@
       "request": "attach",
       "name": "Docker: Attach to Node",
       "remoteRoot": "/usr/src/clean-node-api",
-      "localRoot": "${workspaceRoot}",
+      "port": 9222,
+      "restart": true
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "attach to node",
       "port": 9222,
       "restart": true
     }
-
-    // {
-    //   "type": "node",
-    //   "request": "launch",
-    //   "name": "Launch Program",
-    //   "skipFiles": ["<node_internals>/**"],
-    //   "program": "${workspaceFolder}/src/main/routes/signup-routes.test.ts",
-    //   "preLaunchTask": "tsc: build - tsconfig.json",
-    //   "outFiles": ["${workspaceFolder}/dist/**/*.js"]
-    // }
   ]
 }
