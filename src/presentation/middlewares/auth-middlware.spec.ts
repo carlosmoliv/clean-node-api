@@ -7,13 +7,7 @@ import {
   HttpRequest,
   LoadAccountByToken,
 } from './auth-middleware-protocols'
-
-const makeFakeAccount = (): AccountModel => ({
-  id: 'valid_id',
-  name: 'valid_name',
-  email: 'valid_email@mail.com',
-  password: 'hashed_password',
-})
+import { mockAccountModel } from '@/domain/test'
 
 const makeFakeRequest = (): HttpRequest => ({
   headers: {
@@ -29,7 +23,7 @@ type SutTypes = {
 const makeLoadAccountByToken = (): LoadAccountByToken => {
   class LoadAccountByTokenStub implements LoadAccountByToken {
     async load(accessToken: string, role?: string): Promise<AccountModel> {
-      return Promise.resolve(makeFakeAccount())
+      return Promise.resolve(mockAccountModel())
     }
   }
 
@@ -78,7 +72,7 @@ describe('Auth Middleware', () => {
 
     expect(httpResponse).toEqual(
       ok({
-        accountId: 'valid_id',
+        accountId: 'any_id',
       })
     )
   })
