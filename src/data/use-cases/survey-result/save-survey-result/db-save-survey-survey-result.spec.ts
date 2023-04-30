@@ -5,6 +5,7 @@ import {
   SaveSurveyResultRepository,
   SurveyResultModel,
 } from './db-save-survey-result-protocols'
+import { throwError } from '@/domain/test'
 
 const makeFakeSurveyResultData = (): SaveSurveyResultParams => ({
   accountId: 'any_account_id',
@@ -65,9 +66,7 @@ describe('DbSaveSurveyResult Usecase', () => {
 
     jest
       .spyOn(saveSurveyRepositoryResultStub, 'save')
-      .mockReturnValueOnce(
-        new Promise((resolve, reject) => reject(new Error()))
-      )
+      .mockImplementationOnce(throwError)
 
     const promise = sut.save(makeFakeSurveyResultData())
     await expect(promise).rejects.toThrow()

@@ -19,6 +19,7 @@ import {
   badRequest,
   forbidden,
 } from '../../../helpers/http/http-helper'
+import { throwError } from '@/domain/test'
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
@@ -171,11 +172,7 @@ describe('SignUp Controller', () => {
   it('Should return 500 if EmailValidator throws', async () => {
     const { sut, authenticationStub } = makeSut()
 
-    jest
-      .spyOn(authenticationStub, 'auth')
-      .mockReturnValueOnce(
-        new Promise((resolve, reject) => reject(new Error()))
-      )
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(throwError)
 
     const httpResponse = await sut.handle(makeFakeRequest())
 
