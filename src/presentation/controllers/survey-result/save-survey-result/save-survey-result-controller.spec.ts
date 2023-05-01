@@ -25,7 +25,7 @@ const makeFakeRequest = (): HttpRequest => ({
   accountId: 'any_account_id',
 })
 
-const makeFakeSurvey = (): SurveyModel => ({
+const mockSurveyModel = (): SurveyModel => ({
   id: 'any_id',
   question: 'any_question',
   answers: [
@@ -48,7 +48,7 @@ const makeFakeSurveyResult = (): SurveyResultModel => ({
 const makeLoadSurveyById = (): LoadSurveyById => {
   class LoadSurveyByIdStub implements LoadSurveyById {
     async loadById(id: string): Promise<SurveyModel> {
-      return new Promise((resolve) => resolve(makeFakeSurvey()))
+      return new Promise((resolve) => resolve(mockSurveyModel()))
     }
   }
 
