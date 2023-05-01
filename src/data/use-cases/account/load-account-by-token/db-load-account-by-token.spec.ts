@@ -1,4 +1,4 @@
-import { mockDecrypter } from '@/data/test'
+import { mockDecrypter, mockLoadAccountByTokenRepository } from '@/data/test'
 import { DbLoadAccountByToken } from './db-load-account-by-token'
 import {
   AccountModel,
@@ -8,17 +8,6 @@ import {
 import { mockAccountModel, throwError } from '@/domain/test'
 
 describe('DbLoadAccountByToken Usecase', () => {
-  const makeLoadAccountByTokenRepository = (): LoadAccountByTokenRepository => {
-    class LoadAccountByTokenRepositoryStub
-      implements LoadAccountByTokenRepository
-    {
-      async loadByToken(token: string, role?: string): Promise<AccountModel> {
-        return new Promise((resolve) => resolve(mockAccountModel()))
-      }
-    }
-
-    return new LoadAccountByTokenRepositoryStub()
-  }
   type SutTypes = {
     sut: DbLoadAccountByToken
     decrypterStub: Decrypter
@@ -27,7 +16,7 @@ describe('DbLoadAccountByToken Usecase', () => {
 
   const makeSut = (): SutTypes => {
     const decrypterStub = mockDecrypter()
-    const loadAcountByTokenRepositoryStub = makeLoadAccountByTokenRepository()
+    const loadAcountByTokenRepositoryStub = mockLoadAccountByTokenRepository()
     const sut = new DbLoadAccountByToken(
       decrypterStub,
       loadAcountByTokenRepositoryStub
