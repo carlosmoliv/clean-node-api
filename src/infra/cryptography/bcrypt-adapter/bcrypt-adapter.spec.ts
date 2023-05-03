@@ -5,11 +5,11 @@ const salt = 12
 
 jest.mock('bcrypt', () => ({
   async hash(): Promise<string> {
-    return new Promise((resolve) => resolve('hash'))
+    return Promise.resolve('hash')
   },
 
   async compare(): Promise<boolean> {
-    return new Promise((resolve) => resolve(true))
+    return Promise.resolve(true)
   },
 }))
 
@@ -59,7 +59,7 @@ describe('Bcrypt Adapter', () => {
 
       jest
         .spyOn(bcrypt, 'compare')
-        .mockImplementationOnce(() => new Promise((resolve) => resolve(false)))
+        .mockImplementationOnce(() => Promise.resolve(false))
 
       const isValid = await sut.compare('any_value', 'any_hash')
 
@@ -71,9 +71,7 @@ describe('Bcrypt Adapter', () => {
 
       jest
         .spyOn(bcrypt, 'hash')
-        .mockImplementationOnce(
-          () => new Promise((resolve, reject) => reject(new Error()))
-        )
+        .mockImplementationOnce(() => Promise.reject(new Error()))
 
       const promise = sut.hash('any_value')
 
