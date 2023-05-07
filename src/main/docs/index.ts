@@ -1,6 +1,6 @@
-import { loginPath } from './paths/login-path'
-import { accountSchema } from './schemas/account-schema'
-import { loginParamsSchema } from './schemas/login-params-schema'
+import { loginPath } from './paths'
+import { badRequest, notFound, serverError, unauthorized } from './components'
+import { accountSchema, errorSchema, loginParamsSchema } from './schemas'
 
 export default {
   openapi: '3.0.0',
@@ -8,6 +8,10 @@ export default {
     title: 'Clean Node API',
     description: "Mango's Course API",
     version: '1.0.0',
+  },
+  license: {
+    name: 'ISC',
+    url: 'https://opensource.org/licenses/ISC',
   },
   servers: [
     {
@@ -22,5 +26,15 @@ export default {
   paths: {
     '/login': loginPath,
   },
-  schemas: { account: accountSchema, loginParams: loginParamsSchema },
+  schemas: {
+    account: accountSchema,
+    loginParams: loginParamsSchema,
+    error: errorSchema,
+  },
+  components: {
+    badRequest,
+    unauthorized,
+    serverError,
+    notFound,
+  },
 }

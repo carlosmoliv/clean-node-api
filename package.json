@@ -15,7 +15,7 @@
     "test:integration": "yarn test -- --watch -c jest.config.integration.ts",
     "test:staged": "yarn test",
     "test:ci": "yarn test -- --coverage",
-    "tst:coveralls": "yarn test:ci && coveralls < coverage/lcov.info",
+    "test:coveralls": "yarn test:ci && coveralls < coverage/lcov.info",
     "prepare": "husky install"
   },
   "keywords": [],
