@@ -1,4 +1,4 @@
-export const SurveyResultPath = {
+export const surveyResultPath = {
   put: {
     security: [
       {
