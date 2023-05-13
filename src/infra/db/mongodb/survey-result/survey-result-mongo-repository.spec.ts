@@ -16,11 +16,11 @@ const makeSurvey = async (): Promise<SurveyModel> => {
     question: 'any_question',
     answers: [
       {
+        image: 'any_image',
         answer: 'any_answer',
       },
       {
-        image: 'any_image',
-        answer: 'any_answer',
+        answer: 'other_answer',
       },
     ],
     date: new Date(),
@@ -60,19 +60,19 @@ describe('Survey Mongo Repository', () => {
     surveyCollection = await MongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
 
-    accountCollection = await MongoHelper.getCollection('accounts')
-    await accountCollection.deleteMany({})
-
     surveyResultCollection = await MongoHelper.getCollection('surveyResults')
     await surveyResultCollection.deleteMany({})
+
+    accountCollection = await MongoHelper.getCollection('accounts')
+    await accountCollection.deleteMany({})
   })
 
   describe('save()', () => {
     it('should add a survey result if its new', async () => {
-      const sut = makeSut()
-      const account = await makeAccount()
       const survey = await makeSurvey()
+      const account = await makeAccount()
 
+      const sut = makeSut()
       const surveyResult = await sut.save({
         surveyId: survey.id,
         accountId: account.id,
@@ -85,6 +85,8 @@ describe('Survey Mongo Repository', () => {
       expect(surveyResult.answers[0].answer).toBe(survey.answers[0].answer)
       expect(surveyResult.answers[0].count).toBe(1)
       expect(surveyResult.answers[0].percent).toBe(100)
+      expect(surveyResult.answers[1].count).toBe(0)
+      expect(surveyResult.answers[1].percent).toBe(0)
     })
 
     it('should update a survey result if its not new', async () => {
@@ -118,6 +120,8 @@ describe('Survey Mongo Repository', () => {
       expect(surveyResult.answers[0].answer).toBe(survey.answers[1].answer)
       expect(surveyResult.answers[0].count).toBe(1)
       expect(surveyResult.answers[0].percent).toBe(100)
+      expect(surveyResult.answers[1].count).toBe(0)
+      expect(surveyResult.answers[1].percent).toBe(0)
     })
   })
 })
