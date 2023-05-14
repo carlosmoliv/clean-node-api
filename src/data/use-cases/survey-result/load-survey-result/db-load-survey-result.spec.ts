@@ -8,6 +8,8 @@ import {
   LoadSurveyByIdRepository,
 } from './db-load-survey-result-protocols'
 import { mockSurveyResultModel, throwError } from '@/domain/test'
+import MockDate from 'mockdate'
+import { mock } from 'node:test'
 
 type SutTypes = {
   sut: DbLoadSurveyResult
@@ -32,6 +34,14 @@ const makeSut = (): SutTypes => {
 }
 
 describe('DbLoadSurveyResultUseCase', () => {
+  beforeAll(() => {
+    MockDate.set(new Date())
+  })
+
+  afterAll(() => {
+    MockDate.reset()
+  })
+
   it('should call LoadSurveyResultRepository with correct values', async () => {
     const { sut, loadSurveyResultRepositoryStub } = makeSut()
 
@@ -63,9 +73,7 @@ describe('DbLoadSurveyResultUseCase', () => {
       loadSurveyByIdRepositoryStub,
     } = makeSut()
 
-    const loadByIdSpy = jest
-      .spyOn(loadSurveyByIdRepositoryStub, 'loadById')
-      .mockResolvedValueOnce(null)
+    const loadByIdSpy = jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById')
 
     jest
       .spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId')
@@ -74,6 +82,18 @@ describe('DbLoadSurveyResultUseCase', () => {
     await sut.load('any_survey_id')
 
     expect(loadByIdSpy).toHaveBeenCalledWith('any_survey_id')
+  })
+
+  it('should return surveyResultltModel with all answers with count 0 if LoadSurveyResultRepository returns null', async () => {
+    const { sut, loadSurveyResultRepositoryStub } = makeSut()
+
+    jest
+      .spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId')
+      .mockResolvedValueOnce(null)
+
+    const surveyResult = await sut.load('any_survey_id')
+
+    expect(surveyResult).toEqual(mockSurveyResultModel())
   })
 
   it('should return a surveyResultModel on success', async () => {
