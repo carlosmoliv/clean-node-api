@@ -5,8 +5,12 @@ import {
   LoadSurveyResult,
 } from './load-survey-result-controller-protocols'
 import { InvalidParamError } from '@/presentation/errors'
-import { forbidden, serverError } from '@/presentation/helpers/http/http-helper'
-import { throwError } from '@/domain/test'
+import {
+  forbidden,
+  ok,
+  serverError,
+} from '@/presentation/helpers/http/http-helper'
+import { mockSurveyResultModel, throwError } from '@/domain/test'
 import { mockLoadSurveyById, mockLoadSurveyResult } from '@/presentation/test'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -85,5 +89,12 @@ describe('LoadSurveyResultController', () => {
     await sut.handle(makeFakeRequest())
 
     expect(loadSpy).toHaveBeenCalledWith('any_id')
+  })
+
+  it('should return 200 on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(ok(mockSurveyResultModel()))
   })
 })
