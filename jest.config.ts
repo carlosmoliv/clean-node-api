@@ -4,7 +4,12 @@ const config: Config.InitialOptions = {
   roots: ['<rootDir>/src'],
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
+    '!<rootDir>/src/**/*protocols.ts',
     '!<rootDir>/src/main/**',
+    '!<rootDir>/src/domain/**',
+    '!src/data/protocols/**',
+    '!src/presentation/protocols/**',
+    '!src/validation/protocols/**',
     '!**/test/**',
   ],
   coverageDirectory: 'coverage',
