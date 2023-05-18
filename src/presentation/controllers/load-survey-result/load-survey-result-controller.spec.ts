@@ -13,7 +13,7 @@ import {
 import { mockSurveyResultModel, throwError } from '@/domain/test'
 import { mockLoadSurveyById, mockLoadSurveyResult } from '@/presentation/test'
 
-const makeFakeRequest = (): HttpRequest => ({
+const mockFakeRequest = (): HttpRequest => ({
   params: {
     surveyId: 'any_id',
   },
@@ -46,7 +46,7 @@ describe('LoadSurveyResultController', () => {
     const { sut, loadSurveyByIdStub } = makeSut()
     const loadByIdSpy = jest.spyOn(loadSurveyByIdStub, 'loadById')
 
-    await sut.handle(makeFakeRequest())
+    await sut.handle(mockFakeRequest())
 
     expect(loadByIdSpy).toHaveBeenCalledWith('any_id')
   })
@@ -57,7 +57,7 @@ describe('LoadSurveyResultController', () => {
       .spyOn(loadSurveyByIdStub, 'loadById')
       .mockReturnValueOnce(Promise.resolve(null))
 
-    const httpResponse = await sut.handle(makeFakeRequest())
+    const httpResponse = await sut.handle(mockFakeRequest())
 
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('surveyId')))
   })
@@ -68,7 +68,7 @@ describe('LoadSurveyResultController', () => {
       .spyOn(loadSurveyByIdStub, 'loadById')
       .mockImplementationOnce(throwError)
 
-    const httpResponse = await sut.handle(makeFakeRequest())
+    const httpResponse = await sut.handle(mockFakeRequest())
 
     expect(httpResponse).toEqual(serverError(new Error()))
   })
@@ -77,7 +77,7 @@ describe('LoadSurveyResultController', () => {
     const { sut, loadSurveyResultStub } = makeSut()
     jest.spyOn(loadSurveyResultStub, 'load').mockImplementationOnce(throwError)
 
-    const httpResponse = await sut.handle(makeFakeRequest())
+    const httpResponse = await sut.handle(mockFakeRequest())
 
     expect(httpResponse).toEqual(serverError(new Error()))
   })
@@ -86,7 +86,7 @@ describe('LoadSurveyResultController', () => {
     const { sut, loadSurveyResultStub } = makeSut()
     const loadSpy = jest.spyOn(loadSurveyResultStub, 'load')
 
-    await sut.handle(makeFakeRequest())
+    await sut.handle(mockFakeRequest())
 
     expect(loadSpy).toHaveBeenCalledWith('any_id')
   })
@@ -94,7 +94,7 @@ describe('LoadSurveyResultController', () => {
   it('should return 200 on success', async () => {
     const { sut } = makeSut()
 
-    const httpResponse = await sut.handle(makeFakeRequest())
+    const httpResponse = await sut.handle(mockFakeRequest())
     expect(httpResponse).toEqual(ok(mockSurveyResultModel()))
   })
 })
