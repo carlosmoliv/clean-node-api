@@ -1,11 +1,10 @@
 import { LogErrorRepository } from '../protocols/db/log/log-error-repository'
 
-export const mockLogErrorRespository = (): LogErrorRepository => {
-  class LogErrorRepositoryStub implements LogErrorRepository {
-    async logError(stack: string): Promise<void> {
-      return Promise.resolve()
-    }
-  }
+export class LogErrorRepositorySpy implements LogErrorRepository {
+  stack: string
 
-  return new LogErrorRepositoryStub()
+  async logError(stack: string): Promise<void> {
+    this.stack = stack
+    return Promise.resolve()
+  }
 }

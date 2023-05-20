@@ -11,7 +11,7 @@ const makeSut = (): EmailValidatorAdapter => {
   return new EmailValidatorAdapter()
 }
 
-describe('EmailValidator Adapter', () => {
+describe('EmailValidatorAdapter', () => {
   it('should return false if validator returns false', () => {
     const sut = makeSut()
 

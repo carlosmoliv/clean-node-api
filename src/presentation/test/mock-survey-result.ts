@@ -6,22 +6,22 @@ import {
   SaveSurveyResultParams,
 } from '@/domain/use-cases/survey-result/save-survey-result'
 
-export const mockSaveSurveyResult = (): SaveSurveyResult => {
-  class SaveSurveyResultStub implements SaveSurveyResult {
-    async save(data: SaveSurveyResultParams): Promise<SurveyResultModel> {
-      return Promise.resolve(mockSurveyResultModel())
-    }
-  }
+export class SaveSurveyResultSpy implements SaveSurveyResult {
+  surveyResultModel = mockSurveyResultModel()
+  saveSurveyResultParams: SaveSurveyResultParams
 
-  return new SaveSurveyResultStub()
+  async save(data: SaveSurveyResultParams): Promise<SurveyResultModel> {
+    this.saveSurveyResultParams = data
+    return Promise.resolve(this.surveyResultModel)
+  }
 }
 
-export const mockLoadSurveyResult = (): LoadSurveyResult => {
-  class LoadSurveyResultStub implements LoadSurveyResult {
-    async load(surveyId: string): Promise<SurveyResultModel> {
-      return Promise.resolve(mockSurveyResultModel())
-    }
-  }
+export class LoadSurveyResultSpy implements LoadSurveyResult {
+  surveyResultModel = mockSurveyResultModel()
+  surveyId: string
 
-  return new LoadSurveyResultStub()
+  async load(surveyId: string): Promise<SurveyResultModel> {
+    this.surveyId = surveyId
+    return Promise.resolve(this.surveyResultModel)
+  }
 }

@@ -4,12 +4,7 @@ import {
   ServerError,
 } from '../../../errors'
 import { SignUpController } from './signup-controller'
-import {
-  AddAccount,
-  HttpRequest,
-  Validation,
-  Authentication,
-} from './signup-controller-protocols'
+
 import {
   ok,
   serverError,
@@ -17,134 +12,119 @@ import {
   forbidden,
 } from '../../../helpers/http/http-helper'
 import { throwError } from '@/domain/test'
-import { mockAddAccount, mockAuthentication } from '@/presentation/test'
+import {
+  AuthenticationSpy,
+  ValidationSpy,
+  AddAccountSpy,
+} from '@/presentation/test'
+import { HttpRequest } from './signup-controller-protocols'
+import { faker } from '@faker-js/faker'
 
-const mockValidation = (): Validation => {
-  class ValidationStub implements Validation {
-    validate(input: any): Error {
-      return null as any
-    }
+const mockRequest = (): HttpRequest => {
+  const password = faker.internet.password()
+  return {
+    body: {
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      password,
+      passwordConfirmation: password,
+    },
   }
-
-  return new ValidationStub()
 }
-
-const mockFakeRequest = (): HttpRequest => ({
-  body: {
-    name: 'any_name',
-    email: 'any_email@mail.com',
-    password: 'any_password',
-    passwordConfirmation: 'any_password',
-  },
-})
 
 type SutTypes = {
   sut: SignUpController
-  addAccountStub: AddAccount
-  validationStub: Validation
-  authenticationStub: Authentication
+  addAccountSpy: AddAccountSpy
+  validationSpy: ValidationSpy
+  authenticationSpy: AuthenticationSpy
 }
 
 const makeSut = (): SutTypes => {
-  const authenticationStub = mockAuthentication()
-  const addAccountStub = mockAddAccount()
-  const validationStub = mockValidation()
+  const authenticationSpy = new AuthenticationSpy()
+  const addAccountSpy = new AddAccountSpy()
+  const validationSpy = new ValidationSpy()
 
   const sut = new SignUpController(
-    addAccountStub,
-    validationStub,
-    authenticationStub
+    addAccountSpy,
+    validationSpy,
+    authenticationSpy
   )
 
-  return { sut, addAccountStub, validationStub, authenticationStub }
+  return { sut, addAccountSpy, validationSpy, authenticationSpy }
 }
 
 describe('SignUp Controller', () => {
   it('Should call AddAccount with correct values', async () => {
-    const { sut, addAccountStub } = makeSut()
+    const { sut, addAccountSpy } = makeSut()
+    const httpRequest = mockRequest()
 
-    const addSpy = jest.spyOn(addAccountStub, 'add')
+    await sut.handle(httpRequest)
 
-    sut.handle(mockFakeRequest())
-
-    expect(addSpy).toHaveBeenCalledWith({
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'any_password',
+    expect(addAccountSpy.addAccountParams).toEqual({
+      name: httpRequest.body.name,
+      email: httpRequest.body.email,
+      password: httpRequest.body.password,
     })
   })
 
   it('Should return 500 if AddAccount throws', async () => {
-    const { sut, addAccountStub } = makeSut()
+    const { sut, addAccountSpy } = makeSut()
+    jest.spyOn(addAccountSpy, 'add').mockImplementationOnce(throwError)
 
-    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
-      return Promise.reject(new Error())
-    })
-
-    const httResponse = await sut.handle(mockFakeRequest())
-
-    expect(httResponse).toEqual(serverError(new ServerError()))
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new ServerError(null)))
   })
 
   it('Should return 403 if AddAccount returns null', async () => {
-    const { sut, addAccountStub } = makeSut()
-    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(Promise.resolve(null))
+    const { sut, addAccountSpy } = makeSut()
+    addAccountSpy.accountModel = null
 
-    const httResponse = await sut.handle(mockFakeRequest())
-
-    expect(httResponse).toEqual(forbidden(new EmailInUseError()))
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
   })
 
   it('Should return 200 if valid data is provided', async () => {
-    const { sut } = makeSut()
+    const { sut, authenticationSpy } = makeSut()
 
-    const httResponse = await sut.handle(mockFakeRequest())
-
-    expect(httResponse).toEqual(ok({ accessToken: 'any_token' }))
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(ok({ accessToken: authenticationSpy.token }))
   })
 
   it('Should call Validation with the correct value', async () => {
-    const { sut, validationStub } = makeSut()
-
-    const validateSpy = jest.spyOn(validationStub, 'validate')
-    const httpRequest = mockFakeRequest()
+    const { sut, validationSpy } = makeSut()
+    const httpRequest = mockRequest()
 
     await sut.handle(httpRequest)
 
-    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+    expect(validationSpy.input).toEqual(httpRequest.body)
   })
 
   it('Should return 400 if validation returns an error', async () => {
-    const { sut, validationStub } = makeSut()
+    const { sut, validationSpy } = makeSut()
+    validationSpy.error = new MissingParamError(faker.random.word())
 
-    jest
-      .spyOn(validationStub, 'validate')
-      .mockReturnValueOnce(new MissingParamError('any_value'))
+    const httpResponse = await sut.handle(mockRequest())
 
-    const httResponse = await sut.handle(mockFakeRequest())
-
-    expect(httResponse).toEqual(badRequest(new MissingParamError('any_value')))
+    expect(httpResponse).toEqual(badRequest(validationSpy.error))
   })
 
   it('Should call Authentication with correct values', async () => {
-    const { sut, authenticationStub } = makeSut()
-    const authSpy = jest.spyOn(authenticationStub, 'auth')
+    const { sut, authenticationSpy } = makeSut()
+    const httpRequest = mockRequest()
 
-    await sut.handle(mockFakeRequest())
+    await sut.handle(httpRequest)
 
-    expect(authSpy).toHaveBeenCalledWith({
-      email: 'any_email@mail.com',
-      password: 'any_password',
+    expect(authenticationSpy.authenticationParams).toEqual({
+      email: httpRequest.body.email,
+      password: httpRequest.body.password,
     })
   })
 
   it('Should return 500 if EmailValidator throws', async () => {
-    const { sut, authenticationStub } = makeSut()
+    const { sut, authenticationSpy } = makeSut()
+    jest.spyOn(authenticationSpy, 'auth').mockImplementationOnce(throwError)
 
-    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(throwError)
-
-    const httpResponse = await sut.handle(mockFakeRequest())
-
-    expect(httpResponse).toEqual(serverError(new ServerError()))
+    const httpResponse = await sut.handle(mockRequest())
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
