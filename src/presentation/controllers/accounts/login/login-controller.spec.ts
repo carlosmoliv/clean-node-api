@@ -7,15 +7,12 @@ import {
   unauthorized,
 } from '../../../helpers/http/http-helper'
 import { HttpRequest } from './login-controller-protocols'
-import { throwError } from '@/domain/test'
+import { mockAuthenticationParams, throwError } from '@/domain/test'
 import { faker } from '@faker-js/faker'
 import { AuthenticationSpy, ValidationSpy } from '@/presentation/test'
 
 const mockRequest = (): HttpRequest => ({
-  body: {
-    email: 'any_email@mail.com',
-    password: 'any_password',
-  },
+  body: mockAuthenticationParams(),
 })
 
 type SutTypes = {
@@ -52,7 +49,7 @@ describe('Login Controller', () => {
 
   it('Should return 401 if invalid credentials are provided', async () => {
     const { sut, authenticationSpy } = makeSut()
-    authenticationSpy.token = null
+    authenticationSpy.authenticationModel = null
 
     const httpResponse = await sut.handle(mockRequest())
 
@@ -73,7 +70,7 @@ describe('Login Controller', () => {
 
     const httpResponse = await sut.handle(mockRequest())
 
-    expect(httpResponse).toEqual(ok({ accessToken: authenticationSpy.token }))
+    expect(httpResponse).toEqual(ok(authenticationSpy.authenticationModel))
   })
 
   it('Should call Validation with the correct value', async () => {
@@ -87,7 +84,7 @@ describe('Login Controller', () => {
 
   it('Should return 400 if validation returns an error', async () => {
     const { sut, validationSpy } = makeSut()
-    validationSpy.error = new MissingParamError(faker.random.word())
+    validationSpy.error = new MissingParamError(faker.word.sample())
 
     const httpResponse = await sut.handle(mockRequest())
 
