@@ -10,6 +10,7 @@ import {
 } from '../controllers/accounts/login/login-controller-protocols'
 import { LoadAccountByToken } from '@/domain/use-cases/account/load-account-by-token'
 import { faker } from '@faker-js/faker'
+import { AuthenticationModel } from '@/domain/models/authentication'
 
 export class AddAccountSpy implements AddAccount {
   accountModel = mockAccountModel()
@@ -23,11 +24,17 @@ export class AddAccountSpy implements AddAccount {
 
 export class AuthenticationSpy implements Authentication {
   authenticationParams: AuthenticationParams
-  token = faker.string.uuid()
 
-  async auth(authenticationParams: AuthenticationParams): Promise<string> {
+  authenticationModel = {
+    accessToken: faker.string.uuid(),
+    name: faker.person.fullName(),
+  }
+
+  async auth(
+    authenticationParams: AuthenticationParams
+  ): Promise<AuthenticationModel> {
     this.authenticationParams = authenticationParams
-    return Promise.resolve(this.token)
+    return this.authenticationModel
   }
 }
 
