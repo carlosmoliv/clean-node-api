@@ -2,6 +2,7 @@ import { DbLoadSurveys } from './db-load-surveys'
 import MockDate from 'mockdate'
 import { LoadSurveysRepositorySpy } from '@/data/test'
 import { throwError } from '@/domain/test'
+import { faker } from '@faker-js/faker'
 
 type SutTypes = {
   sut: DbLoadSurveys
@@ -29,16 +30,17 @@ describe('DbLoadSurveys', () => {
 
   it('should call LoadSurveysRepository', async () => {
     const { sut, loadSurveysRepositorySpy } = makeSut()
+    const accountId = faker.string.uuid()
 
-    await sut.load()
+    await sut.load(accountId)
 
-    expect(loadSurveysRepositorySpy.callsCount).toBe(1)
+    expect(loadSurveysRepositorySpy.accountId).toBe(accountId)
   })
 
   it('should return a list of surveys on success', async () => {
     const { sut, loadSurveysRepositorySpy } = makeSut()
 
-    const surveys = await sut.load()
+    const surveys = await sut.load(faker.string.uuid())
 
     expect(surveys).toEqual(loadSurveysRepositorySpy.surveyModels)
   })
@@ -50,7 +52,7 @@ describe('DbLoadSurveys', () => {
       .spyOn(loadSurveysRepositorySpy, 'loadAll')
       .mockImplementationOnce(throwError)
 
-    const promise = sut.load()
+    const promise = sut.load(faker.string.uuid())
 
     expect(promise).rejects.toThrow()
   })

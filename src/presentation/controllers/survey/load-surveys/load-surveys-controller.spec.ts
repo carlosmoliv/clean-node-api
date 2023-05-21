@@ -1,9 +1,12 @@
 import { noContent, ok, serverError } from '../../../helpers/http/http-helper'
 import { LoadSurveysController } from './load-surveys-controller'
-import { LoadSurveys, SurveyModel } from './load-surveys-controller-protocols'
 import mockdate from 'mockdate'
 import { LoadSurveysSpy } from '@/presentation/test'
 import { throwError } from '@/domain/test'
+import { HttpRequest } from './load-surveys-controller-protocols'
+import { faker } from '@faker-js/faker'
+
+const mockRequest = (): HttpRequest => ({ accountId: faker.string.uuid() })
 
 type SutTypes = {
   sut: LoadSurveysController
@@ -29,18 +32,19 @@ describe('LoadSurveysController', () => {
     mockdate.reset()
   })
 
-  it('should call LoadSurveys', async () => {
+  it('should call LoadSurveys with correct value', async () => {
     const { sut, loadSurveysSpy } = makeSut()
+    const httpRequest = mockRequest()
 
-    await sut.handle({})
+    await sut.handle(httpRequest)
 
-    expect(loadSurveysSpy.callsCount).toBe(1)
+    expect(loadSurveysSpy.accountId).toBe(httpRequest.accountId)
   })
 
   it('should return 200 on success', async () => {
     const { sut, loadSurveysSpy } = makeSut()
 
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle(mockRequest())
 
     expect(httpResponse).toEqual(ok(loadSurveysSpy.surveyModels))
   })
@@ -49,7 +53,7 @@ describe('LoadSurveysController', () => {
     const { sut, loadSurveysSpy } = makeSut()
     loadSurveysSpy.surveyModels = []
 
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle(mockRequest())
 
     expect(httpResponse).toEqual(noContent())
   })
@@ -58,7 +62,7 @@ describe('LoadSurveysController', () => {
     const { sut, loadSurveysSpy } = makeSut()
     jest.spyOn(loadSurveysSpy, 'load').mockImplementationOnce(throwError)
 
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle(mockRequest())
 
     expect(httpResponse).toEqual(serverError(new Error()))
   })

@@ -10,7 +10,7 @@
     "debug": "nodemon -L --watch ./dist --inspect=0.0.0.0:9222 dist/main/server.js",
     "up": "yarn build && docker compose up",
     "down": "docker compose down",
-    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
+    "test": "jest --passWithNoTests --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "yarn test -- --watch -c jest.config.unit.ts",
     "test:integration": "yarn test -- --watch -c jest.config.integration.ts",
