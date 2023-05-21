@@ -12,6 +12,7 @@ import { faker } from '@faker-js/faker'
 import { InvalidParamError } from '@/presentation/errors'
 
 const mockRequest = (): HttpRequest => ({
+  accountId: faker.string.uuid(),
   params: {
     surveyId: faker.string.uuid(),
   },
@@ -83,13 +84,14 @@ describe('LoadSurveyResultController', () => {
     expect(httpResponse).toEqual(serverError(new Error()))
   })
 
-  it('should call LoadSurveyResult with correct value', async () => {
+  it('should call LoadSurveyResult with correct values', async () => {
     const { sut, loadSurveyResultSpy } = makeSut()
     const httpRequest = mockRequest()
 
     await sut.handle(httpRequest)
 
     expect(loadSurveyResultSpy.surveyId).toBe(httpRequest.params.surveyId)
+    expect(loadSurveyResultSpy.accountId).toBe(httpRequest.accountId)
   })
 
   it('should return 200 on success', async () => {
