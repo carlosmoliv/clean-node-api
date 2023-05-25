@@ -4,12 +4,11 @@ import {
   forbidden,
   ok,
   serverError,
-} from '../../../helpers/http/http-helper'
+} from '@/presentation/helpers/http/http-helper'
 import {
   AddAccount,
   Authentication,
   Controller,
-  HttpRequest,
   HttpResponse,
   Validation,
 } from './signup-controller-protocols'
@@ -24,10 +23,10 @@ export class SignUpController implements Controller {
     this.validation = validation
   }
 
-  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { name, email, password } = httpRequest.body
+  async handle(request: SignUpController.Request): Promise<HttpResponse> {
+    const { name, email, password } = request
 
-    const error = this.validation.validate(httpRequest.body)
+    const error = this.validation.validate(request)
     if (error) return badRequest(error)
 
     try {
@@ -48,5 +47,14 @@ export class SignUpController implements Controller {
     } catch (error) {
       return serverError(error)
     }
+  }
+}
+
+export namespace SignUpController {
+  export type Request = {
+    name: string
+    email: string
+    password: string
+    passwordConfirmation: string
   }
 }

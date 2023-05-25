@@ -5,7 +5,6 @@ import {
 } from '../../../helpers/http/http-helper'
 import {
   Controller,
-  HttpRequest,
   HttpResponse,
   Validation,
   AddSurvey,
@@ -17,10 +16,10 @@ export class AddSurveyController implements Controller {
     private readonly addSurvey: AddSurvey
   ) {}
 
-  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle(request: AddSurveyController.Request): Promise<HttpResponse> {
     try {
-      const { question, answers } = httpRequest.body
-      const error = this.validation.validate(httpRequest.body)
+      const { question, answers } = request
+      const error = this.validation.validate(request)
 
       if (error) {
         return badRequest(error)
@@ -36,5 +35,17 @@ export class AddSurveyController implements Controller {
     } catch (error) {
       return serverError(error)
     }
+  }
+}
+
+export namespace AddSurveyController {
+  export type Request = {
+    question: string
+    answers: Answer[]
+  }
+
+  type Answer = {
+    image?: string
+    answer: string
   }
 }

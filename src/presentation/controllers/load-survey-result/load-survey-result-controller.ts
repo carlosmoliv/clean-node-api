@@ -5,7 +5,6 @@ import {
 } from '@/presentation/helpers/http/http-helper'
 import {
   Controller,
-  HttpRequest,
   HttpResponse,
   LoadSurveyById,
   LoadSurveyResult,
@@ -18,8 +17,11 @@ export class LoadSurveyResultController implements Controller {
     private readonly loadSurveyResult: LoadSurveyResult
   ) {}
 
-  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-    const { surveyId } = httpRequest.params
+  async handle(
+    request: LoadSurveyResultController.Request
+  ): Promise<HttpResponse> {
+    const { surveyId } = request
+
     try {
       const survey = await this.loadSurveyById.loadById(surveyId)
 
@@ -27,12 +29,19 @@ export class LoadSurveyResultController implements Controller {
 
       const surveyResult = await this.loadSurveyResult.load(
         surveyId,
-        httpRequest.accountId
+        request.accountId
       )
 
       return ok(surveyResult)
     } catch (error) {
       return serverError(error)
     }
+  }
+}
+
+export namespace LoadSurveyResultController {
+  export type Request = {
+    surveyId: string
+    accountId: string
   }
 }
