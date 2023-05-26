@@ -24,19 +24,19 @@ export class SignUpController implements Controller {
   }
 
   async handle(request: SignUpController.Request): Promise<HttpResponse> {
-    const { name, email, password } = request
-
     const error = this.validation.validate(request)
     if (error) return badRequest(error)
 
     try {
-      const account = await this.addAccount.add({
+      const { name, email, password } = request
+
+      const isValid = await this.addAccount.add({
         name: name,
         email: email,
         password: password,
       })
 
-      if (!account) return forbidden(new EmailInUseError())
+      if (!isValid) return forbidden(new EmailInUseError())
 
       const authenticationModel = await this.authentication.auth({
         email,

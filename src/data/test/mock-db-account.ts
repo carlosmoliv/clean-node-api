@@ -2,7 +2,6 @@ import { mockAccountModel } from '@/domain/test'
 import { AddAccountRepository } from '../protocols/db/account/add-account-repository'
 import {
   AccountModel,
-  AddAccountParams,
   LoadAccountByEmailRepository,
 } from '../use-cases/account/add-account/db-add-account-protocols'
 import { LoadAccountByTokenRepository } from '../protocols/db/account/load-account-by-token-repository'
@@ -10,11 +9,25 @@ import { UpdateAccessTokenRepository } from '../protocols/db/account/update-acce
 
 export class AddAccountRepositorySpy implements AddAccountRepository {
   accountModel = mockAccountModel()
-  addAccountParams: AddAccountParams
+  addAccountParams: AddAccountRepository.Params
 
-  async add(data: AddAccountParams): Promise<AccountModel> {
+  async add(
+    data: AddAccountRepository.Params
+  ): Promise<AddAccountRepository.Result> {
     this.addAccountParams = data
-    return Promise.resolve(this.accountModel)
+    return this.accountModel
+  }
+}
+
+export class LoadAccountByEmailRepositorySpy
+  implements LoadAccountByEmailRepository
+{
+  accountModel = mockAccountModel()
+  email: string
+
+  async loadByEmail(email: string): Promise<AccountModel> {
+    this.email = email
+    return this.accountModel
   }
 }
 
@@ -28,18 +41,6 @@ export class LoadAccountByTokenRepositorySpy
   async loadByToken(token: string, role?: string): Promise<AccountModel> {
     this.token = token
     this.role = role
-    return Promise.resolve(this.accountModel)
-  }
-}
-
-export class LoadAccountByEmailRepositorySpy
-  implements LoadAccountByEmailRepository
-{
-  accountModel = mockAccountModel()
-  email: string
-
-  async loadByEmail(email: string): Promise<AccountModel> {
-    this.email = email
     return Promise.resolve(this.accountModel)
   }
 }

@@ -2,7 +2,6 @@ import { mockAccountModel } from '@/domain/test'
 import {
   AccountModel,
   AddAccount,
-  AddAccountParams,
 } from '../controllers/accounts/signup/signup-controller-protocols'
 import {
   Authentication,
@@ -13,12 +12,12 @@ import { faker } from '@faker-js/faker'
 import { AuthenticationModel } from '@/domain/models/authentication'
 
 export class AddAccountSpy implements AddAccount {
-  accountModel = mockAccountModel()
-  addAccountParams: AddAccountParams
+  isValid = true
+  addAccountParams: AddAccount.Params
 
-  async add(account: AddAccountParams): Promise<AccountModel> {
+  async add(account: AddAccount.Params): Promise<AddAccount.Result> {
     this.addAccountParams = account
-    return Promise.resolve(this.accountModel)
+    return this.isValid
   }
 }
 
