@@ -2,20 +2,10 @@ import { MongoHelper } from '../helpers/mongo-helper'
 import { Collection, ObjectId } from 'mongodb'
 import { SurveyMongoRepository } from './survey-mongo-repository'
 import { mockAddAccountParams, mockAddSurveyParams } from '@/domain/test'
-import { SurveyModel } from '@/domain/models/survey'
 
 let surveyCollection: Collection
 let surveyResultCollection: Collection
 let accountCollection: Collection
-
-const mockAccount = async (): Promise<SurveyModel> => {
-  const res = await accountCollection.insertOne(mockAddAccountParams())
-
-  const account = await accountCollection.findOne({ _id: res.insertedId })
-  if (!account) throw Error('Account not found')
-
-  return MongoHelper.map(account)
-}
 
 const mockAccountId = async (): Promise<string> => {
   const res = await accountCollection.insertOne(mockAddAccountParams())
@@ -76,14 +66,16 @@ describe('SurveyMongoRepository', () => {
       // Arrange
       const accountId = await mockAccountId()
       const addSurveyModels = [mockAddSurveyParams(), mockAddSurveyParams()]
+
       const result = await surveyCollection.insertMany(addSurveyModels)
+
       const survey = await surveyCollection.findOne({
         _id: result.insertedIds[0],
       })
 
       const test = await surveyResultCollection.insertOne({
         surveyId: survey._id,
-        accountId: new ObjectId(accountId),
+        accountId,
         answer: survey.answers[0].answer,
         date: new Date(),
       })

@@ -2,11 +2,10 @@ import { faker } from '@faker-js/faker'
 import { Controller, HttpResponse } from '@/presentation/protocols'
 import { LogControllerDecorator } from './log'
 import { serverError, ok } from '@/presentation/helpers/http/http-helper'
-import { mockAccountModel } from '@/domain/test'
 import { LogErrorRepositorySpy } from '@/data/test'
 
 class ControllerSpy implements Controller {
-  httpResponse = ok(mockAccountModel())
+  httpResponse = ok(faker.string.uuid())
   request: any
 
   async handle(request: any): Promise<HttpResponse> {

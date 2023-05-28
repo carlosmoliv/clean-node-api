@@ -3,7 +3,6 @@ import {
   Hasher,
   AddAccountRepository,
   LoadAccountByEmailRepository,
-  AccountModel,
 } from './db-add-account-protocols'
 
 export class DbAddAccount implements AddAccount {
@@ -17,17 +16,18 @@ export class DbAddAccount implements AddAccount {
     const account = await this.loadAccountByEmailRepository.loadByEmail(
       accountData.email
     )
-    let newAccount: AccountModel = null
+
+    let isValid = false
 
     if (!account) {
       const hashedPassword = await this.hasher.hash(accountData.password)
 
-      newAccount = await this.addAccountRepository.add({
+      isValid = await this.addAccountRepository.add({
         ...accountData,
         password: hashedPassword,
       })
     }
 
-    return newAccount != null
+    return isValid
   }
 }
