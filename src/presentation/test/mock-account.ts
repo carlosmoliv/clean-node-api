@@ -3,13 +3,9 @@ import {
   AccountModel,
   AddAccount,
 } from '../controllers/accounts/signup/signup-controller-protocols'
-import {
-  Authentication,
-  AuthenticationParams,
-} from '../controllers/accounts/login/login-controller-protocols'
+import { Authentication } from '../controllers/accounts/login/login-controller-protocols'
 import { LoadAccountByToken } from '@/domain/use-cases/account/load-account-by-token'
 import { faker } from '@faker-js/faker'
-import { AuthenticationModel } from '@/domain/models/authentication'
 
 export class AddAccountSpy implements AddAccount {
   isValid = true
@@ -22,7 +18,7 @@ export class AddAccountSpy implements AddAccount {
 }
 
 export class AuthenticationSpy implements Authentication {
-  authenticationParams: AuthenticationParams
+  authenticationParams: Authentication.Params
 
   authenticationModel = {
     accessToken: faker.string.uuid(),
@@ -30,8 +26,8 @@ export class AuthenticationSpy implements Authentication {
   }
 
   async auth(
-    authenticationParams: AuthenticationParams
-  ): Promise<AuthenticationModel> {
+    authenticationParams: Authentication.Params
+  ): Promise<Authentication.Result> {
     this.authenticationParams = authenticationParams
     return this.authenticationModel
   }
