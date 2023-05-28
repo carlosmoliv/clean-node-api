@@ -13,8 +13,8 @@ describe('CompareFieldsValidation', () => {
   it('should return an InvalidParamError if validation fails', () => {
     const sut = makeSut()
     const error = sut.validate({
-      [field]: faker.word.sample(),
-      [fieldToCompare]: faker.word.sample(),
+      [field]: 'any_field',
+      [fieldToCompare]: 'other_field',
     })
 
     expect(error).toEqual(new InvalidParamError(fieldToCompare))

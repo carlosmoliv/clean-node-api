@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
-import { SurveyModel } from '../models/survey'
-import { AddSurveyParams } from '../use-cases/survey/add-survey'
+import { SurveyModel } from '@/domain/models/survey'
+import { AddSurvey } from '@/domain/use-cases/survey/add-survey'
 
 export const mockSurveyModel = (): SurveyModel => ({
   id: faker.string.uuid(),
@@ -22,7 +22,7 @@ export const mockSurveysModel = (): SurveyModel[] => [
   mockSurveyModel(),
 ]
 
-export const mockAddSurveyParams = (): AddSurveyParams => ({
+export const mockAddSurveyParams = (): AddSurvey.Params => ({
   question: faker.word.words(),
   answers: [
     {
