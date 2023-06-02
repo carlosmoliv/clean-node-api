@@ -1,6 +1,9 @@
 import { faker } from '@faker-js/faker'
 import { AddAccountRepository } from '../protocols/db/account/add-account-repository'
-import { LoadAccountByEmailRepository } from '../use-cases/account/add-account/db-add-account-protocols'
+import {
+  CheckAccountByEmailRepository,
+  LoadAccountByEmailRepository,
+} from '../use-cases/account/add-account/db-add-account-protocols'
 import { LoadAccountByTokenRepository } from '../protocols/db/account/load-account-by-token-repository'
 import { UpdateAccessTokenRepository } from '../protocols/db/account/update-access-token-repository'
 
@@ -30,6 +33,20 @@ export class LoadAccountByEmailRepositorySpy
   async loadByEmail(
     email: string
   ): Promise<LoadAccountByEmailRepository.Result> {
+    this.email = email
+    return this.result
+  }
+}
+
+export class CheckAccountByEmailRepositorySpy
+  implements CheckAccountByEmailRepository
+{
+  email: string
+  result = false
+
+  async checkByEmail(
+    email: string
+  ): Promise<CheckAccountByEmailRepository.Result> {
     this.email = email
     return this.result
   }
