@@ -7,6 +7,7 @@ import { QueryBuilder } from '../helpers'
 import { CheckSurveyById } from '@/domain/use-cases/survey/check-survey-by-id'
 import { CheckSurveyByIdRepository } from '@/data/protocols/db/survey/check-survey-by-id-repository'
 import { LoadSurveyByIdRepository } from '@/data/protocols/db/survey/load-survey-by-id-repository'
+import { LoadAnswersBySurveyRepository } from '@/data/protocols/db/survey/load-answers-by-survey-repository'
 
 export class SurveyMongoRepository
   implements
@@ -63,6 +64,23 @@ export class SurveyMongoRepository
     const survey = await surveyCollection.findOne({ _id: new ObjectId(id) })
 
     return survey && MongoHelper.map(survey)
+  }
+
+  async loadAnswers(id: string): Promise<LoadAnswersBySurveyRepository.Result> {
+    const surveyCollection = MongoHelper.getCollection('surveys')
+
+    const query = new QueryBuilder()
+      .match({
+        _id: new ObjectId(id),
+      })
+      .project({
+        _id: 0,
+        answers: '$answers.answer',
+      })
+      .build()
+
+    const surveys = await surveyCollection.aggregate(query).toArray()
+    return surveys[0]?.answers || []
   }
 
   async checkById(id: string): Promise<CheckSurveyByIdRepository.Result> {
