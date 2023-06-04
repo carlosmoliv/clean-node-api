@@ -3,9 +3,10 @@ import {
   LoadSurveys,
   SurveyModel,
 } from '../controllers/survey/load-surveys/load-surveys-controller-protocols'
-import { mockSurveyModel, mockSurveysModel } from '@/domain/test'
-import { LoadSurveyById } from '@/domain/use-cases/survey/load-survey-by-id'
+import { mockSurveysModel } from '@/domain/test'
 import { CheckSurveyById } from '../controllers/load-survey-result/load-survey-result-controller-protocols'
+import { LoadAnswersBySurvey } from '../controllers/survey-result/save-survey-result/save-survey-result-controller-protocols'
+import { faker } from '@faker-js/faker'
 
 export class AddSurveySpy implements AddSurvey {
   addSurveyParams: AddSurvey.Params
@@ -26,13 +27,13 @@ export class LoadSurveysSpy implements LoadSurveys {
   }
 }
 
-export class LoadSurveyByIdSpy implements LoadSurveyById {
-  surveyModel = mockSurveyModel()
+export class LoadAnswersBySurveySpy implements LoadAnswersBySurvey {
+  result = [faker.word.sample(), faker.word.sample()]
   id: string
 
-  async loadById(id: string): Promise<SurveyModel> {
+  async loadAnswers(id: string): Promise<LoadAnswersBySurvey.Result> {
     this.id = id
-    return Promise.resolve(this.surveyModel)
+    return this.result
   }
 }
 

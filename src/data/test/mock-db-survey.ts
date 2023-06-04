@@ -1,7 +1,7 @@
 import { mockSurveyModel, mockSurveysModel } from '@/domain/test'
 import { AddSurveyRepository } from '../protocols/db/survey/add-survey-repository'
 import { LoadSurveyByIdRepository } from '../protocols/db/survey/load-survey-by-id-repository'
-import { SurveyModel } from '../use-cases/survey/load-survey-by-id/db-load-survey-by-id-protocols'
+import { SurveyModel } from '../use-cases/survey/load-answers-by-survey/db-load-answers-by-survey-protocols'
 import { LoadSurveysRepository } from '../protocols/db/survey/load-surveys-repository'
 import { CheckSurveyByIdRepository } from '../protocols/db/survey/check-survey-by-id-repository'
 

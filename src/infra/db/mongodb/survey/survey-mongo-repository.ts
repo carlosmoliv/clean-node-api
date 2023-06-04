@@ -1,4 +1,3 @@
-import { LoadSurveyByIdRepository } from '@/data/use-cases/survey/load-survey-by-id/db-load-survey-by-id-protocols'
 import { LoadSurveysRepository } from '@/data/protocols/db/survey/load-surveys-repository'
 import { SurveyModel } from '../../../../domain/models/survey'
 import { MongoHelper } from '../helpers/mongo-helper'
@@ -7,6 +6,7 @@ import { AddSurveyRepository } from '@/data/protocols/db/survey/add-survey-repos
 import { QueryBuilder } from '../helpers'
 import { CheckSurveyById } from '@/domain/use-cases/survey/check-survey-by-id'
 import { CheckSurveyByIdRepository } from '@/data/protocols/db/survey/check-survey-by-id-repository'
+import { LoadSurveyByIdRepository } from '@/data/protocols/db/survey/load-survey-by-id-repository'
 
 export class SurveyMongoRepository
   implements
