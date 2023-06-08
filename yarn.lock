@@ -1645,7 +1645,7 @@
     "@types/qs" "*"
     "@types/range-parser" "*"
 
-"@types/express@*", "@types/express@^4.17.12", "@types/express@^4.17.9":
+"@types/express@*", "@types/express@^4.17.12":
   version "4.17.17"
   resolved "https://registry.yarnpkg.com/@types/express/-/express-4.17.17.tgz#01d5437f6ef9cfa8668e616e13c2f2ac9a491ae4"
   integrity sha512-Q4FmmuLGBG58btUnfS1c1r/NQdlp3DMfGDGig8WhfpA2YRUtEkxAjkZb0yvplJGYdF1fsQ81iMDcH24sSCNC/Q==
@@ -1668,6 +1668,13 @@
   integrity sha512-Sig0SNORX9fdW+bQuTEovKj3uHcUL6LQKbCrrqb1X7J6/ReAbhCXRAhc+SMejhLELFj2QcyuxmUooZ4bt5ReSw==
   dependencies:
     "@types/node" "*"
+
+"@types/graphql-iso-date@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@types/graphql-iso-date/-/graphql-iso-date-3.4.0.tgz#b6710b21e3b0bfdb1a0529b285148d98eac18b1f"
+  integrity sha512-V3jITHTsoI2E8TGt9+/HPDz6LWt3z9/HYnPJYWI6WwiLRexsngg7KzaQlCgQkA4jkEbGPROUD0hJFc9F02W9WA==
+  dependencies:
+    graphql "^15.1.0"
 
 "@types/graphql@^14.5.0":
   version "14.5.0"
@@ -4024,6 +4031,11 @@ graphql-extensions@^0.16.0:
     apollo-server-env "^3.2.0"
     apollo-server-types "^0.10.0"
 
+graphql-iso-date@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/graphql-iso-date/-/graphql-iso-date-3.6.1.tgz#bd2d0dc886e0f954cbbbc496bbf1d480b57ffa96"
+  integrity sha512-AwFGIuYMJQXOEAgRlJlFL4H1ncFM8n8XmoVDTNypNOZyQ8LFDG2ppMFlsS862BSTCDcSUfHp8PD3/uJhv7t59Q==
+
 graphql-subscriptions@^1.0.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-1.2.1.tgz#2142b2d729661ddf967b7388f7cf1dd4cf2e061d"
@@ -4054,7 +4066,7 @@ graphql@*:
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.6.0.tgz#c2dcffa4649db149f6282af726c8c83f1c7c5fdb"
   integrity sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==
 
-graphql@^15.4.0:
+graphql@^15.1.0, graphql@^15.4.0:
   version "15.8.0"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.8.0.tgz#33410e96b012fa3bdb1091cc99a94769db212b38"
   integrity sha512-5gghUc24tP9HRznNpV2+FIoq3xKkj5dTQqf4v0CpdPbFVwFkWoxOM+o+2OC9ZSvjEMTjfmG9QT+gcvggTwW1zw==
