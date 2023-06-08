@@ -1,7 +1,4 @@
-import {
-  SaveSurveyResultParams,
-  SurveyResultModel,
-} from '@/data/use-cases/survey-result/save-survey-result/db-save-survey-result-protocols'
+import { SurveyResultModel } from '@/data/use-cases/survey-result/save-survey-result/db-save-survey-result-protocols'
 import { MongoHelper, QueryBuilder } from '../helpers'
 import { ObjectId } from 'mongodb'
 import { SaveSurveyResultRepository } from '@/data/protocols/db/survey-result/save-survey-result-repository'
@@ -10,7 +7,7 @@ import { LoadSurveyResultRepository } from '@/data/protocols/db/survey-result/lo
 export class SurveyResultMongoRepository
   implements SaveSurveyResultRepository, LoadSurveyResultRepository
 {
-  async save(data: SaveSurveyResultParams): Promise<void> {
+  async save(data: SaveSurveyResultRepository.Params): Promise<void> {
     const surveyResultCollection = await MongoHelper.getCollection(
       'surveyResults'
     )
@@ -36,7 +33,7 @@ export class SurveyResultMongoRepository
   async loadBySurveyId(
     surveyId: string,
     accountId: string
-  ): Promise<SurveyResultModel | null> {
+  ): Promise<LoadSurveyResultRepository.Result> {
     const surveyResultCollection = MongoHelper.getCollection('surveyResults')
 
     const query = new QueryBuilder()
