@@ -1,13 +1,16 @@
 import request from 'supertest'
-import app from '../config/app'
+import { setupApp } from '@/main/config/app'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { Collection } from 'mongodb'
 import { hash } from 'bcrypt'
+import { Express } from 'express'
 
 let accountCollection: Collection
+let app: Express
 
 describe('Login Routes', () => {
   beforeAll(async () => {
+    app = await setupApp()
     await MongoHelper.connect('mongodb://localhost:27017/clean-node-api')
   })
 

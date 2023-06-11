@@ -1,9 +1,9 @@
-import { Express } from 'express'
-import { GraphQLError } from 'graphql'
 import { ApolloServer } from 'apollo-server-express'
+import { makeExecutableSchema } from '@graphql-tools/schema'
+import { GraphQLError } from 'graphql'
 import resolvers from '@/main/graphql/resolvers'
 import typeDefs from '@/main/graphql/type-defs'
-import schemaDirectives from '@/main/graphql/directives'
+import { authDirectiveTransformer } from '@/main/graphql/directives'
 
 const handleErrors = (response: any, errors: readonly GraphQLError[]): void => {
   errors?.forEach((error) => {
@@ -27,21 +27,20 @@ const checkError = (error: GraphQLError, errorName: string): boolean => {
   )
 }
 
-export default async (app: Express): Promise<void> => {
-  const server = new ApolloServer({
-    resolvers,
-    typeDefs,
-    schemaDirectives,
+let schema = makeExecutableSchema({ resolvers, typeDefs })
+schema = authDirectiveTransformer(schema)
+
+export const setupApolloServer = (): ApolloServer =>
+  new ApolloServer({
+    schema,
     context: ({ req }) => ({ req }),
     plugins: [
       {
-        requestDidStart: () => ({
-          willSendResponse: ({ response, errors }) =>
+        requestDidStart: async () => ({
+          willSendResponse: async ({ response, errors }) =>
             handleErrors(response, errors),
         }),
       },
     ],
+    introspection: true,
   })
-
-  server.applyMiddleware({ app })
-}

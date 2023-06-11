@@ -1,12 +1,14 @@
 import request from 'supertest'
-import app from '../config/app'
+import { setupApp } from '@/main/config/app'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import { Collection } from 'mongodb'
 import { sign } from 'jsonwebtoken'
 import env from '../config/env'
+import { Express } from 'express'
 
 let surveyCollection: Collection
 let accountCollection: Collection
+let app: Express
 
 const mockAccessToken = async (): Promise<string> => {
   const res = await accountCollection.insertOne({
@@ -34,6 +36,7 @@ const mockAccessToken = async (): Promise<string> => {
 
 describe('Survey Result Routes', () => {
   beforeAll(async () => {
+    app = await setupApp()
     await MongoHelper.connect('mongodb://localhost:27017/clean-node-api')
   })
 

@@ -1,16 +1,16 @@
 import { hash } from 'bcrypt'
-import { Collection } from 'mongodb'
-import { ApolloServer, gql } from 'apollo-server-express'
-
-import { MongoHelper } from '@/infra/db/mongodb/helpers'
 import request from 'supertest'
-import app from '@/main/config/app'
+import { Collection } from 'mongodb'
+import { setupApp } from '@/main/config/app'
+import { MongoHelper } from '@/infra/db/mongodb/helpers'
+import { Express } from 'express'
 
 let accountCollection: Collection
-let apolloServer: ApolloServer
+let app: Express
 
 describe('Login Graphql', () => {
   beforeAll(async () => {
+    app = await setupApp()
     await MongoHelper.connect(process.env.MONGO_URL)
   })
 
