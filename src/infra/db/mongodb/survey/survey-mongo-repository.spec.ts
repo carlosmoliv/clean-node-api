@@ -1,4 +1,4 @@
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 import FakeObjectId from 'bson-objectid'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { SurveyMongoRepository } from './survey-mongo-repository'
@@ -63,7 +63,7 @@ describe('SurveyMongoRepository', () => {
     it('should load return null if survey does not exists', async () => {
       const sut = makeSut()
 
-      const survey = await sut.loadById(FakeObjectId().toHexString())
+      const survey = await sut.loadById(new FakeObjectId().toHexString())
 
       expect(survey).toBeFalsy()
     })
@@ -104,7 +104,7 @@ describe('SurveyMongoRepository', () => {
       const sut = makeSut()
       const res = await surveyCollection.insertOne(mockAddSurveyParams())
 
-      const exists = await sut.checkById(FakeObjectId().toHexString())
+      const exists = await sut.checkById(new FakeObjectId().toHexString())
 
       expect(exists).toBe(false)
     })
@@ -131,9 +131,9 @@ describe('SurveyMongoRepository', () => {
         _id: result.insertedIds[0],
       })
 
-      const test = await surveyResultCollection.insertOne({
+      await surveyResultCollection.insertOne({
         surveyId: survey._id,
-        accountId,
+        accountId: new ObjectId(accountId),
         answer: survey.answers[0].answer,
         date: new Date(),
       })
@@ -147,8 +147,7 @@ describe('SurveyMongoRepository', () => {
       expect(surveys.length).toBe(2)
       expect(surveys[0].id).toBeTruthy()
       expect(surveys[0].question).toBe(addSurveyModels[0].question)
-      // TODO: fix this test
-      // expect(surveys[0].didAnswer).toBe(true)
+      expect(surveys[0].didAnswer).toBe(true)
       expect(surveys[1].question).toBe(addSurveyModels[1].question)
       expect(surveys[1].didAnswer).toBe(false)
     })

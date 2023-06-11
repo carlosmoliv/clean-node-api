@@ -8,19 +8,19 @@ import env from '../config/env'
 let surveyCollection: Collection
 let accountCollection: Collection
 
-const makeAccessToken = async (): Promise<string> => {
+const mockAccessToken = async (): Promise<string> => {
   const res = await accountCollection.insertOne({
     name: 'John Doe',
     email: 'johndoe@mail.com',
     password: '123456',
   })
 
-  const id = res.insertedId
+  const id = res.insertedId.toHexString()
   const accessToken = sign({ id }, env.jwtSecret)
 
   await accountCollection.updateOne(
     {
-      _id: id,
+      _id: res.insertedId,
     },
     {
       $set: {
@@ -60,7 +60,7 @@ describe('Survey Result Routes', () => {
     })
 
     it('should return 200 on save survey result with valid access token', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await mockAccessToken()
 
       const res = await surveyCollection.insertOne({
         question: 'Question',
@@ -92,7 +92,7 @@ describe('Survey Result Routes', () => {
     })
 
     it('should return 200 on load survey result with valid access token', async () => {
-      const accessToken = await makeAccessToken()
+      const accessToken = await mockAccessToken()
 
       const res = await surveyCollection.insertOne({
         question: 'Question',

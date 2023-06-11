@@ -75,13 +75,11 @@ export class SurveyResultMongoRepository
         },
         currentAccountAnswer: {
           $push: {
-            $cond: {
-              if: {
-                $eq: ['$data.accountId', new ObjectId(accountId)],
-              },
-              then: '$data.answer',
-              else: '$nope',
-            },
+            $cond: [
+              { $eq: ['$data.accountId', new ObjectId(accountId)] },
+              '$data.answer',
+              '$invalid',
+            ],
           },
         },
       })
@@ -214,7 +212,10 @@ export class SurveyResultMongoRepository
       })
       .build()
 
-    const surveyResult = await surveyResultCollection.aggregate(query).toArray()
-    return surveyResult.length ? (surveyResult[0] as SurveyResultModel) : null
+    const surveyResult = await surveyResultCollection
+      .aggregate<SurveyResultModel>(query)
+      .toArray()
+
+    return surveyResult.length ? surveyResult[0] : null
   }
 }

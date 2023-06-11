@@ -20,11 +20,7 @@ export class AccountMongoRepository
     const accountCollection = MongoHelper.getCollection('accounts')
 
     const result = await accountCollection.insertOne(data)
-
-    const account = await accountCollection.findOne({ _id: result.insertedId })
-    if (!account) throw Error('Account not found')
-
-    return account !== null
+    return result.insertedId !== null
   }
 
   async loadByEmail(

@@ -89,7 +89,7 @@ describe('AccountMongoRepository', () => {
       const fakeAccount = await accountCollection.findOne({
         _id: res.insertedId,
       })
-      // if (!fakeAccount) throw Error('Account not found')
+
       expect(fakeAccount.accessToken).toBeFalsy()
 
       const accessToken = faker.string.uuid()
